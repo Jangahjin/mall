@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { productGetList, API_SERVER_HOST } from "../../api/productApi";
+import { productGetList } from "../../api/productApi";
+import { API_SERVER_HOST } from "../../api/todoApi";
 import { Table, Container, Card, Row } from "react-bootstrap";
 import useCustomMove from "../../hooks/UseCustomMove";
 import PageComponent from "../common/PageComponent";
@@ -26,7 +27,7 @@ const ListComponent = ({
   size,
   moveToProductList,
   moveToProductRead,
-  refresh,
+  exceptionHandle,
 }) => {
   const [serverData, setServerData] = useState(initState);
   // for FetchingModal
@@ -46,7 +47,7 @@ const ListComponent = ({
       .finally(() => {
         setFetching(false);
       });
-  }, [page, size, refresh]);
+  }, [page, size]);
 
   return (
     <>

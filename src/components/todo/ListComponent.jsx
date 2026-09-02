@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
-import { getList } from "../../api/todoApi";
-import { Table, Container } from "react-bootstrap";
-import PageComponent from "../common/PageComponent";
+import { useEffect, useState } from "react";
+import useCustomMove from "../../hooks/useCustomMove"; // 훅 경로에 맞게 수정하세요
+import { getList } from "../../api/todoApi"; // API 호출 함수 임포트 경로 확인
+import { Container, Table } from "react-bootstrap";
+import PageComponent from "../../components/common/PageComponent";
 
 const initState = {
   dtoList: [],
@@ -9,23 +10,24 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totalCount: 0, // 💡 [수정] totoalCount의 철자 오타를 totalCount로 수정했습니다.
+  totalCount: 0,
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
   current: 0,
 };
 
-const ListComponent = ({ page, size, moveToList, moveToRead, refresh }) => {
+const ListComponent = () => {
+  const { page, size, moveToRead, moveToList, refresh } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
 
   useEffect(() => {
     getList({ page, size }).then((data) => {
       console.log(data);
-      console.log("================");
       setServerData(data);
     });
   }, [page, size, refresh]);
+
   return (
     <Container className="px-5 justify-content-center">
       <Table striped bordered hover size="lg">
@@ -38,11 +40,7 @@ const ListComponent = ({ page, size, moveToList, moveToRead, refresh }) => {
         </thead>
         <tbody>
           {serverData.dtoList.map((todo) => (
-            // 💡 [수정] moveToRead 뒤에 && 연산자를 추가하여, 함수가 존재할 때만 실행되도록 에러 방지 안전장치를 만들었습니다.
-            <tr
-              key={todo.tno}
-              onClick={() => moveToRead && moveToRead(todo.tno)}
-            >
+            <tr key={todo.tno} onClick={() => moveToRead(todo.tno)}>
               <td className="text-center">{todo.tno}</td>
               <td>{todo.title}</td>
               <td>{todo.dueDate}</td>

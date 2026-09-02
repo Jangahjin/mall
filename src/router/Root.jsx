@@ -2,6 +2,9 @@ import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Loading from "../pages/Loding";
 
+const LoginPage = lazy(() => import("../pages/member/LoginPage"));
+const LogoutPage = lazy(() => import("../pages/member/LogoutPage"));
+
 //메인화면 관련 페이지
 const MainPage = lazy(() => import("../pages/MainPage"));
 const About = lazy(() => import("../pages/AboutPage"));
@@ -97,6 +100,24 @@ const Root = createBrowserRouter([
     element: (
       <Suspense fallback={<Loading />}>
         <ProductModifyPage />
+      </Suspense>
+    ),
+  },
+  //login -----------------------------------------------------------------
+  {
+    path: "/member/login",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <LoginPage />
+      </Suspense>
+    ),
+  },
+
+  {
+    path: "/member/logout",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <LogoutPage />
       </Suspense>
     ),
   },

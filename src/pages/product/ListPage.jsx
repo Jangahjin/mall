@@ -1,13 +1,15 @@
 import { Container } from "react-bootstrap";
 import Header from "../../include/Header";
 import ListComponent from "../../components/product/ListComponent";
-// 🚀 useCustomMove 훅을 임포트합니다.
+import useCustomLogin from "../../hooks/useCustomLogin";
 import useCustomMove from "../../hooks/UseCustomMove";
+import { exceptionHandle } from "../../components/common/exceptionHandle";
 
 const ListPage = () => {
-  // 🚀 useCustomMove 훅을 호출하여 필요한 값과 이동 함수들을 받아옵니다.
   const { page, size, moveToProductList, moveToProductRead, refresh } =
     useCustomMove();
+
+  const { exceptionHandle } = useCustomLogin();
 
   return (
     <Container>
@@ -21,7 +23,7 @@ const ListPage = () => {
           size={size}
           moveToProductList={moveToProductList}
           moveToProductRead={moveToProductRead}
-          refresh={refresh}
+          exceptionHandle={exceptionHandle}
         />
       </div>
     </Container>
