@@ -42,12 +42,17 @@ const loginSlice = createSlice({
   name: 'loginSlice',
   initialState,
   reducers: {
-    logout: (state) => {
-      console.log("logout................ ");
-      removeCookie("member"); // 로그아웃 시 쿠키 삭제
-      state.email = '';
-      state.nickname = '';
-      state.accessToken = '';
+    login: (state, action) => { 
+      console.log("login .......... "); 
+      // 소셜로그인 회원이 사용
+      const payload = action.payload; 
+      setCookie("member", JSON.stringify(payload), 1); // 1일 
+      return payload; 
+    },
+    logout: (state, action) => {
+      console.log("logout .......... ");
+      removeCookie("member");
+      return { email: '', nickname: '', accessToken: '' };
     }
   },
   extraReducers: (builder) => {
@@ -72,5 +77,5 @@ const loginSlice = createSlice({
   }
 });
 
-export const { logout } = loginSlice.actions;
+export const { login, logout } = loginSlice.actions;
 export default loginSlice.reducer;
