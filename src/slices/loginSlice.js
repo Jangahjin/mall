@@ -42,12 +42,14 @@ const loginSlice = createSlice({
   name: 'loginSlice',
   initialState,
   reducers: {
-    login: (state, action) => { 
-      console.log("login .......... "); 
+    login: (state, action) => {
+      console.log("login .......... ");
       // 소셜로그인 회원이 사용
-      const payload = action.payload; 
-      setCookie("member", JSON.stringify(payload), 1); // 1일 
-      return payload; 
+      const payload = action.payload;
+      setCookie("member", JSON.stringify(payload), 1); // 1일
+      console.log("[DEBUG] JSON length:", JSON.stringify(payload).length);
+      console.log("[DEBUG] document.cookie after setCookie:", document.cookie);
+      return payload;
     },
     logout: (state, action) => {
       console.log("logout .......... ");

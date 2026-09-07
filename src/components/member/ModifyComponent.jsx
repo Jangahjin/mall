@@ -32,10 +32,14 @@ export default function ModifyComponent() {
   };
 
   const handleClickModify = () => {
-    modifyMember(member).then((result) => {
-      setResult("Modified");
-      setInfoModalOn(true);
-    });
+    modifyMember(member)
+      .then((result) => {
+        setResult("Modified");
+        setInfoModalOn(true);
+      })
+      .catch((err) => {
+        console.error("회원정보 수정 실패:", err.response?.data || err.message);
+      });
   };
 
   const closeModal = () => {

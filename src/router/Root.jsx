@@ -24,6 +24,8 @@ const ProductModifyPage = lazy(() => import("../pages/product/ModifyPage"));
 const KakaoRedirect = lazy(() => import("../pages/member/KakaoRedirectPage"));
 const MemberModify = lazy(() => import("../pages/member/ModifyPage"));
 
+const CartPage = lazy(() => import("../pages/cart/CartPage")); // 폴더명 pages로 일치시킴
+
 const Root = createBrowserRouter([
   {
     path: "/",
@@ -136,9 +138,16 @@ const Root = createBrowserRouter([
     path: "/member/modify",
     element: (
       <Suspense fallback={<Loading />}>
-        {" "}
-        {/* ✅ 꺾쇠 괄호 추가 완료 */}
         <MemberModify />
+      </Suspense>
+    ),
+  },
+  // cart page 경로
+  {
+    path: "/cart/read",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <CartPage />
       </Suspense>
     ),
   },

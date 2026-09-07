@@ -49,9 +49,6 @@ const AddComponent = ({ moveToProductList }) => {
     formData.append("price", product.price);
     console.log(formData);
     setFetching(true);
-    postAdd(formData).then((data) => {
-      setFetching(false);
-    });
 
     // 4. API 호출 (소문자 postAdd 사용)
     postAdd(formData)
@@ -66,6 +63,9 @@ const AddComponent = ({ moveToProductList }) => {
         setContent("등록에 실패했습니다.");
         setFlag(true);
         console.error(e);
+      })
+      .finally(() => {
+        setFetching(false);
       });
   };
 

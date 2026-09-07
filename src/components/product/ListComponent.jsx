@@ -77,6 +77,12 @@ const ListComponent = ({
                       objectFit: "cover",
                     }}
                     src={`${host}/api/product/view/s_${product.uploadFileNames[0]}`}
+                    onError={(e) => {
+                      // 이미지 로드 실패 시 깨진 아이콘 대신 플레이스홀더로 대체 (무한루프 방지를 위해 핸들러 제거)
+                      e.target.onerror = null;
+                      e.target.src =
+                        "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='224' height='128'%3E%3Crect width='100%25' height='100%25' fill='%23e9ecef'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236c757d' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
+                    }}
                   />
                 )}
             </Card>

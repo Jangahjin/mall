@@ -41,6 +41,7 @@ export default function Header() {
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="#action/3.4">예비용</NavDropdown.Item>
                 </NavDropdown>
+                <Nav.Link href="/cart/read">CART</Nav.Link>
               </>
             ) : (
               <></>
