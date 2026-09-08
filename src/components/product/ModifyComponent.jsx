@@ -1,3 +1,8 @@
+/**
+ * [화면 설명] 기존 상품 하나의 정보를 수정하거나 삭제하는 화면입니다.
+ * 화면이 열리면 서버에서 해당 상품 정보를 불러와 입력창에 채워주고,
+ * "수정하기"를 누르면 변경 내용을 저장하고, "삭제하기"를 누르면 상품을 완전히 지웁니다.
+ */
 import { useEffect, useState, useRef } from "react";
 import {
   productGetOne,
@@ -8,6 +13,7 @@ import {
 import { Container, Form, Row, Button, Card } from "react-bootstrap";
 import InfoModel from "../common/InfoModel";
 
+// 데이터가 도착하기 전 화면이 사용할 기본값
 const initState = {
   pno: 0,
   pname: "",
@@ -29,6 +35,8 @@ const ModifyComponent = ({ pno, moveToProductList, moveToProductRead }) => {
   const [title, setTitle] = useState("");
   const [fetching, setFetching] = useState(true);
 
+  // 화면이 열릴 때(또는 pno가 바뀔 때) 해당 번호(pno)의 상품 정보를 서버에서 가져와
+  // 입력창에 미리 채워 넣음
   useEffect(() => {
     setFetching(true);
     productGetOne(pno)

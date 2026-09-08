@@ -1,9 +1,14 @@
+/**
+ * [화면 설명] 새 할일(TODO)을 등록하는 입력 폼 화면입니다.
+ * 제목/작성자/마감일을 입력하고 "저장" 버튼을 누르면 새 할일이 하나 등록됩니다.
+ */
 import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import useCustomMove from "../../hooks/UseCustomMove";
 import { postAdd } from "../../api/todoApi";
 import InfoModel from "../common/InfoModel";
 
+// 폼이 처음 열렸을 때 기본값
 const initState = {
   title: "",
   writer: "",
@@ -18,6 +23,7 @@ const AddComponent = (page) => {
   const [content, setContent] = useState(null);
   const [title, setTitle] = useState("");
 
+  // 입력창(제목/작성자/마감일)에 값을 입력할 때마다 화면 상태에 반영
   const onChangeTodo = (e) => {
     setTodo({
       ...todo,
@@ -25,6 +31,7 @@ const AddComponent = (page) => {
     });
   };
 
+  // "저장" 버튼을 눌렀을 때 실행 — 입력한 할일 정보를 서버로 전송해 새로 등록
   const onClickInsert = () => {
     postAdd(todo)
       .then((result) => {
@@ -43,6 +50,7 @@ const AddComponent = (page) => {
       });
   };
 
+  // 저장 결과 안내 팝업을 닫으면 할일 목록 화면으로 돌아감
   const closeModel = () => {
     setFlag(false); // 🚀 flase 오타를 false로 완벽하게 수정했습니다.
     moveToList();

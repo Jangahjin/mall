@@ -10,6 +10,10 @@ import {
 import { useCallback } from "react";
 import useCustomMove from "../../hooks/UseCustomMove";
 
+// [페이지 요약]
+// "할일(Todo) 상세 보기" 화면을 보여주는 페이지입니다.
+// 주소창의 할일 번호(tno)를 읽어와서 그 할일의 상세 내용을
+// ReadComponent가 화면에 그려주도록 전달합니다.
 const ReadPage = () => {
   // 🚀 구조 분해 할당 목록에 tno를 포함하여 'tno is not defined' 에러를 해결했습니다.
   const { moveToList, moveToModify, moveToAdd, moveToRead, refresh, tno } =

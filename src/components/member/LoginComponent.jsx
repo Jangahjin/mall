@@ -1,7 +1,11 @@
+// 일반 로그인(이메일/비밀번호) 화면을 담당하는 컴포넌트입니다.
+// 입력창에 이메일/비밀번호를 적고 "로그인" 버튼을 누르면 서버에 로그인 요청을 보내고,
+// 성공하면 메인 화면으로 이동하고, 실패하면 안내 문구를 보여줍니다.
 import React, { useState } from "react";
 import { FloatingLabel, Form, Button } from "react-bootstrap";
 import KakaoLoginComponent from "./KakaoLoginComponent";
 
+// 입력창의 초기값(처음엔 둘 다 빈칸)입니다.
 const initState = {
   email: "",
   pw: "",
@@ -12,6 +16,8 @@ export default function LoginComponent({ doLogin, moveToPath }) {
   const [loginParam, setLoginParam] = useState({ ...initState });
 
   // 1. 입력값 변경 처리
+  // 사용자가 이메일이나 비밀번호 입력창에 글자를 입력할 때마다 호출되어,
+  // 화면에 입력된 내용을 그대로 상태(loginParam)에 반영합니다.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginParam((prev) => ({
@@ -21,6 +27,8 @@ export default function LoginComponent({ doLogin, moveToPath }) {
   };
 
   // 2. 로그인 클릭 처리
+  // "로그인" 버튼을 누르면 실행됩니다. 입력한 이메일/비밀번호를 서버로 보내
+  // 확인을 요청하고, 결과에 따라 성공/실패 안내를 띄웁니다.
   const handleClickLogin = () => {
     // 부모에게 받은 doLogin(내부적으로 loginPostAsync 실행) 호출
     doLogin(loginParam)

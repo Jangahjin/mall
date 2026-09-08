@@ -1,3 +1,8 @@
+/**
+ * [화면 설명] 새 상품을 등록하는 입력 폼 화면입니다.
+ * 상품명, 설명, 가격을 입력하고 사진 파일을 첨부한 뒤 "저장" 버튼을 누르면
+ * 서버에 새 상품이 하나 생성됩니다.
+ */
 import { useState, useRef } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 // 🚀 productApi.jsx의 export 이름에 맞춰 소문자 postAdd로 수정합니다.
@@ -5,6 +10,7 @@ import { postAdd } from "../../api/productApi";
 import InfoModel from "../common/InfoModel";
 import FetchingModal from "../common/FetchingModal";
 
+// 폼이 처음 열렸을 때(또는 초기화될 때) 기본값
 const initState = {
   pname: "",
   pdesc: "",
@@ -12,15 +18,20 @@ const initState = {
 };
 
 const AddComponent = ({ moveToProductList }) => {
+  // 사용자가 입력창에 입력 중인 상품 정보(이름/설명/가격)
   const [product, setProduct] = useState({ ...initState });
+  // 파일 선택창(<input type="file">)의 값을 직접 읽기 위한 참조
   const uploadRef = useRef();
 
+  // 저장 결과를 알려주는 안내 팝업(모달)에 표시할 내용
   const [content, setContent] = useState(null);
   const [title, setTitle] = useState("");
+  // 안내 팝업을 보여줄지 여부
   const [flag, setFlag] = useState(false);
   //FetchingModal 보이거나, 사라지게하는 flag역할
   const [fetching, setFetching] = useState(false);
 
+  // 입력창(상품명/설명/가격)에 글자를 입력할 때마다 화면 상태에 반영
   const onChangeProduct = (e) => {
     setProduct({
       ...product,
@@ -28,6 +39,7 @@ const AddComponent = ({ moveToProductList }) => {
     });
   };
 
+  // "저장" 버튼을 눌렀을 때 실행 — 입력한 정보와 첨부 파일을 서버로 전송
   const onClickInsert = () => {
     const formData = new FormData();
     const files = uploadRef.current?.files;
@@ -69,6 +81,7 @@ const AddComponent = ({ moveToProductList }) => {
       });
   };
 
+  // 저장 결과 안내 팝업을 닫으면(확인 버튼) 상품 목록 화면으로 돌아감
   const closeModel = () => {
     setFlag(false);
     moveToProductList();

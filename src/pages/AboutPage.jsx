@@ -3,6 +3,9 @@ import { Container } from "react-bootstrap";
 import Header from "../include/Header";
 import useCustomLogin from "../hooks/useCustomLogin";
 
+// [이 페이지가 하는 일]
+// 로그인한 회원만 볼 수 있는 "소개" 페이지.
+// 로그인이 안 되어 있으면 안내창을 띄우고 로그인 페이지로 강제 이동시킨다.
 const AboutPage = () => {
   const { isLogin, moveToLogin } = useCustomLogin();
 

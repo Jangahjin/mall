@@ -1,6 +1,9 @@
+// 서버와 통신하다가 에러가 발생했을 때 공통으로 처리해주는 함수입니다.
+// 어떤 종류의 에러인지에 따라 사용자에게 알맞은 안내 문구(alert 팝업)를 보여줍니다.
 export const exceptionHandle = (err) => {
   console.error("API Error caught:", err);
 
+  // 1. 서버가 응답은 했지만, 에러 상태코드(400, 401, 404, 500 등)를 보낸 경우
   if (err.response) {
     const status = err.response.status;
     const message =

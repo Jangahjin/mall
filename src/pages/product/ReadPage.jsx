@@ -4,6 +4,10 @@ import ReadComponent from "../../components/product/ReadComponet";
 import { useParams } from "react-router-dom";
 import useCustomMove from "../../hooks/UseCustomMove"; // 경로 확인
 
+// [페이지 요약]
+// "상품 상세 보기" 화면을 보여주는 페이지입니다.
+// 주소창에 담긴 상품 번호(pno)를 읽어와서, 그 번호에 해당하는
+// 상품 정보를 ReadComponent가 화면에 그려주도록 전달합니다.
 const ReadPage = () => {
   const {
     moveToProductList, // 💡 이름 오타 수정 (moveProduct -> moveToProduct)

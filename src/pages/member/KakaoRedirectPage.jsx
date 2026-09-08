@@ -5,6 +5,13 @@ import { useDispatch } from "react-redux";
 import { login } from "../../slices/loginSlice";
 import useCustomLogin from "../../hooks/useCustomLogin";
 
+// [이 페이지가 하는 일]
+// "카카오 로그인" 버튼을 누르면 카카오 서버로 갔다가, 로그인이 끝나면
+// 카카오가 사용자를 이 페이지 주소로 다시 돌려보낸다(리다이렉트).
+// 이때 주소 뒤에 붙어오는 1회용 "인가 코드(code)"를 받아서
+// 1) 카카오 서버에 진짜 접속 열쇠(access token)를 요청하고
+// 2) 그 열쇠로 카카오 회원 정보를 받아온 뒤
+// 3) 우리 서비스 로그인 상태(Redux + 쿠키)로 저장하는, 카카오 로그인의 "마무리 처리" 페이지다.
 const KakaoRedirectPage = () => {
   const [searchParams] = useSearchParams();
   const authCode = searchParams.get("code");
