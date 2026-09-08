@@ -2,7 +2,6 @@
 // - 상품 이미지, 이름, 가격, 수량, 합계를 보여주고
 // - "증가/감소" 버튼으로 수량을 바꾸거나, "삭제" 버튼으로 장바구니에서 뺄 수 있습니다.
 import { Button, Image } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { API_SERVER_HOST } from "../../api/todoApi";
 import useCustomMove from "../../hooks/useCustomMove";
 
@@ -18,7 +17,7 @@ const CartItemComponent = ({
   changeCart,
   email,
 }) => {
-  const { page, size, moveProductToRead } = useCustomMove();
+  const { moveToProductRead } = useCustomMove();
 
   // 사용자가 "증가" 또는 "감소" 버튼을 누르면 호출됩니다.
   // amount에 +1(증가) 또는 -1(감소), 삭제 시에는 현재 수량 전체를 음수로 넘겨서
@@ -28,17 +27,15 @@ const CartItemComponent = ({
     changeCart(param);
   };
 
-  // 상품 이미지를 클릭했을 때 해당 상품의 상세 페이지로 이동시키는 함수입니다.
-  // 상품 상세 페이지로 이동하는 함수 구현
-  const handleMoveRead = (pno) => {
-    navigate(`/product/read/${pno}`);
-  };
-
   return (
     <tr>
       <td className="text-center">
         <Image
-          src={`${host}/api/products/view/s_${imageFile}`}
+          src={
+            imageFile
+              ? `${host}/api/product/view/s_${imageFile}`
+              : "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23e9ecef'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236c757d' font-family='sans-serif' font-size='11'%3ENo Image%3C/text%3E%3C/svg%3E"
+          }
           roundedCircle
           className="border shadow-sm"
           style={{
@@ -47,7 +44,14 @@ const CartItemComponent = ({
             objectFit: "cover",
             cursor: "pointer",
           }}
-          onClick={() => handleMoveRead(pno)}
+          onClick={() => moveToProductRead(pno)}
+          onError={(e) => {
+            // 상품 사진이 깨져서 안 보일 때, "No Image" 회색 박스로 대신 보여줌
+            // (무한루프 방지를 위해 핸들러 제거)
+            e.target.onerror = null;
+            e.target.src =
+              "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23e9ecef'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236c757d' font-family='sans-serif' font-size='11'%3ENo Image%3C/text%3E%3C/svg%3E";
+          }}
         />
       </td>
       <td className="text-center align-middle">{cino}</td>
