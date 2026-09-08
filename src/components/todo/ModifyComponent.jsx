@@ -1,8 +1,15 @@
+/**
+ * [화면 설명] 기존 할일(TODO) 하나의 정보를 수정하거나 삭제하는 화면입니다.
+ * 화면이 열리면 서버에서 해당 할일 정보를 불러와 입력창에 채워주고,
+ * "수정하기"/"삭제하기" 버튼으로 각각의 동작을 수행합니다.
+ * (수정 버튼 → putOne 호출, 삭제 버튼 → deleteOne 호출로 바로잡음)
+ */
 import { useEffect, useState } from "react";
 import { getOne, putOne, deleteOne } from "../../api/todoApi";
 import { Container, Form } from "react-bootstrap";
 import InfoModel from "../common/InfoModel";
 
+// 데이터가 도착하기 전 화면이 사용할 기본값
 const initState = {
   tno: 0,
   title: "",
@@ -18,24 +25,29 @@ const ModifyComponent = ({ tno, moveToList, moveToRead }) => {
   const [content, setContent] = useState(null);
   const [title, setTitle] = useState("");
 
+  // 화면이 열릴 때(또는 tno가 바뀔 때) 해당 번호(tno)의 할일 정보를 서버에서 가져와
+  // 입력창에 미리 채워 넣음
   useEffect(() => {
     getOne(tno).then((data) => {
       setTodo(data);
     });
   }, [tno]);
 
+  // 입력창(작성자/제목/마감일)에 값을 입력할 때마다 화면 상태에 반영
   const onChangeTodo = (e) => {
     todo[e.target.name] = e.target.value;
     setTodo({ ...todo });
   };
 
+  // "완료 여부" 선택창을 바꿀 때 실행
   const onChangeComplete = (e) => {
     const value = e.target.value === "true" ? true : false;
     setTodo({ ...todo, complete: value });
   };
 
+  // "수정하기" 버튼을 눌렀을 때 실행되는 함수 — 입력한 내용으로 서버 데이터를 갱신(putOne)
   const onClickupdate = () => {
-    deleteOne(todo)
+    putOne(todo)
       .then((data) => {
         setTitle(`TODO 수정 ${todo.tno}`);
         data.RESULT === "SUCCESS"
@@ -51,8 +63,9 @@ const ModifyComponent = ({ tno, moveToList, moveToRead }) => {
       });
   };
 
+  // "삭제하기" 버튼을 눌렀을 때 실행되는 함수 — 서버에서 해당 항목을 제거(deleteOne)
   const onClickdelete = () => {
-    putOne(todo)
+    deleteOne(todo)
       .then((data) => {
         setTitle(`TODO 삭제 ${todo.tno}`);
         data.RESULT === "SUCCESS"
@@ -68,6 +81,7 @@ const ModifyComponent = ({ tno, moveToList, moveToRead }) => {
       });
   };
 
+  // 결과 안내 팝업을 닫으면 할일 목록 화면으로 돌아감
   const closeModel = () => {
     setFlag(false);
     moveToList();
