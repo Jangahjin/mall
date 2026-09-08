@@ -1,10 +1,14 @@
 import { productGetOne } from "../../api/productApi";
 import { API_SERVER_HOST } from "../../api/todoApi";
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Button, Container } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 // 필요한 경우 FetchingModal 임포트
 // import FetchingModal from "../common/FetchingModal";
+import useCustomCart from "../../hooks/useCustomCart";
+import useCustomLogin from "../../hooks/useCustomLogin";
+import useCustomMove from "../../hooks/useCustomMove";
 
 const host = API_SERVER_HOST;
 
@@ -17,28 +21,121 @@ const initState = {
   uploadFileNames: [],
 };
 
-const ReadComponent = ({ pno, moveToProductList, moveToProductModify }) => {
+const ReadComponent = ({ pno }) => {
   const [product, setProduct] = useState(initState);
-  const [fetching, setFetching] = useState(false);
+
+  const { moveToProductList, moveToProductModify } = useCustomMove();
+  const navigate = useNavigate();
+
+  const [fetching, setFetching] = useState(false); // fetching
+
+  // 상단 공지 배너 상태 (null이면 배너를 숨긴다)
+  // { variant: "warning" | "danger", message: string, confirmQty?: number }
+  const [notice, setNotice] = useState(null);
 
   useEffect(() => {
     setFetching(true);
-    productGetOne(pno)
-      .then((data) => {
-        console.log(data);
-        setProduct(data);
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
+    // getOne -> productGetOne으로 올바르게 수정
+    productGetOne(pno).then((data) => {
+      setProduct(data);
+      setFetching(false);
+    });
   }, [pno]);
+
+  // 장바구니 기능
+  const { changeCart, cartItems = [], refreshCart } = useCustomCart();
+  // 로그인 정보
+  const { loginState, isLogin } = useCustomLogin();
+
+  // 중복 상품 판정을 위해 진입 시 장바구니 목록을 한 번 불러온다
+  useEffect(() => {
+    if (isLogin) {
+      refreshCart();
+    }
+  }, [isLogin]);
+
+  // 상품을 다른 상품으로 옮겨가면 이전 상품의 공지는 지운다
+  useEffect(() => {
+    setNotice(null);
+  }, [pno]);
+
+  // 실제 장바구니 변경 요청 (성공하면 장바구니 화면으로 이동)
+  const requestChangeCart = async (qty) => {
+    try {
+      await changeCart({ email: loginState.email, pno: pno, qty: qty }).unwrap();
+      navigate("/cart/list");
+    } catch {
+      setNotice({
+        variant: "danger",
+        message: "장바구니 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+      });
+    }
+  };
+
+  // 장바구니에 담기
+  const handleClickAddCart = () => {
+    if (!isLogin) {
+      setNotice({ variant: "warning", message: "로그인 후 이용해 주세요." });
+      return;
+    }
+
+    const itemArr = cartItems.filter(
+      (item) => parseInt(item.pno) === parseInt(pno),
+    );
+    const addItem = itemArr[0];
+
+    // 이미 담긴 상품이면 바로 담지 않고 상단에 공지만 띄운다
+    if (addItem) {
+      setNotice({
+        variant: "warning",
+        message: `이미 장바구니에 담긴 상품입니다. (현재 수량 ${addItem.qty}개) 수량을 1개 더 추가할까요?`,
+        confirmQty: addItem.qty + 1,
+      });
+      return;
+    }
+
+    requestChangeCart(1);
+  };
+
+  // 공지 배너의 "수량 추가" 버튼
+  const handleClickConfirmQty = () => {
+    requestChangeCart(notice.confirmQty);
+  };
 
   return (
     <Container className="p-5">
       {/* {fetching ? <FetchingModal /> : <></>} */}
+
+      {notice && (
+        <Alert
+          variant={notice.variant}
+          onClose={() => setNotice(null)}
+          dismissible
+        >
+          {notice.message}
+          {notice.confirmQty && (
+            <div className="mt-2 d-flex gap-2">
+              <Button
+                size="sm"
+                variant="primary"
+                type="button"
+                onClick={handleClickConfirmQty}
+              >
+                수량 추가
+              </Button>
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                type="button"
+                onClick={() => setNotice(null)}
+              >
+                취소
+              </Button>
+            </div>
+          )}
+        </Alert>
+      )}
+
       <Form>
         <Form.Group className="mb-3">
           <Form.Label>PNO</Form.Label>
@@ -116,6 +213,13 @@ const ReadComponent = ({ pno, moveToProductList, moveToProductModify }) => {
           }}
         >
           리스트보기
+        </button>
+        <button
+          className="btn btn-secondary"
+          type="button"
+          onClick={handleClickAddCart}
+        >
+          장바구니담기
         </button>
       </div>
     </Container>

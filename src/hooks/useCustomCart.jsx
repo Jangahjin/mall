@@ -8,9 +8,7 @@ const useCustomCart = () => {
     dispatch(getCartItemsAsync());
   };
 
-  const changeCart = (param) => {
-    dispatch(postChangeCartAsync(param));
-  };
+  const changeCart = (param) => dispatch(postChangeCartAsync(param));
 
   return { cartItems, refreshCart, changeCart };
 };
